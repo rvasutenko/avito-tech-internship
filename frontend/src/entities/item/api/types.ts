@@ -1,14 +1,17 @@
 import type { CATEGORY } from "../model/category";
 import type { ItemParams } from "../model/types";
 
+export type SortColumn = "title" | "createdAt";
+export type SortDirection = "asc" | "desc";
+
 export type ItemsGetIn = {
   q?: string;
   limit?: number;
   skip?: number;
   needsRevision?: boolean;
   categories?: string;
-  sortColumn?: "title" | "createdAt";
-  sortDirection?: "asc" | "desc";
+  sortColumn?: SortColumn;
+  sortDirection?: SortDirection;
 };
 
 export type ItemsGetOut = {

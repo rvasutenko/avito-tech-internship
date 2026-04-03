@@ -1,8 +1,12 @@
 import { ItemsFilter, ItemsGrid, SearchBar } from "@/features";
 import { Grid, Stack, Title } from "@mantine/core";
 import { ItemsTotal } from "./ui/ItemsTotal";
+import { useSyncFiltersWithUrl } from "@/features/ItemsFilter/model/useSyncFiltersWithUrl";
+import { observer } from "mobx-react-lite";
 
-export const ItemsList = () => {
+export const ItemsList = observer(() => {
+  useSyncFiltersWithUrl();
+
   return (
     <Grid>
       <Grid.Col span={12}>
@@ -22,4 +26,4 @@ export const ItemsList = () => {
       </Grid.Col>
     </Grid>
   );
-};
+});

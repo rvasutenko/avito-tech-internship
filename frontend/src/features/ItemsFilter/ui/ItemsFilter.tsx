@@ -9,10 +9,9 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { observer } from "mobx-react-lite";
 import { TreeView } from "./TreeView";
 
-export const ItemsFilter = observer(() => {
+export const ItemsFilter = () => {
   const { filters } = useStores();
 
   return (
@@ -27,14 +26,22 @@ export const ItemsFilter = observer(() => {
           onChange={(e) => filters.setNeedsRevision(e.currentTarget.checked)}
           labelPosition="left"
           label="Только требующие доработок"
+          styles={{
+            body: { justifyContent: "space-between", alignItems: "center" },
+          }}
         />
       </Card>
 
-      <Button variant="white" color="black" size="md">
+      <Button
+        variant="white"
+        color="black"
+        size="md"
+        onClick={() => filters.reset()}
+      >
         <Text size="sm" fw={600}>
           Сбросить фильтры
         </Text>
       </Button>
     </Stack>
   );
-});
+};

@@ -15,7 +15,7 @@ export const createRoutes = () => {
         },
         {
           path: "*",
-          element: <Navigate to={"/"} replace />,
+          element: <Navigate to={ROUTES_NAMES.ADS_LIST} replace />,
         },
       ],
     },

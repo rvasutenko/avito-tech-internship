@@ -1,3 +1,4 @@
+import { useStores } from "@/app/providers";
 import s from "./SearchBar.module.scss";
 import {
   Group,
@@ -11,15 +12,19 @@ import {
   MagnifyingGlassIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDebouncedValue } from "@mantine/hooks";
+import { DEBOUNCE_WAIT } from "./config";
 
 export const SearchBar = () => {
-  const [value, setValue] = useState("");
+  const { filters } = useStores();
 
-  const iconProps = {
-    style: { display: "block" },
-    size: 20,
-  };
+  const [value, setValue] = useState(filters.search);
+  const [debounced] = useDebouncedValue(value, DEBOUNCE_WAIT);
+
+  useEffect(() => {
+    filters.setSearch(debounced);
+  }, [debounced]);
 
   return (
     <Group className={s.searchBar} align={"center"} gap={"xs"}>
@@ -28,7 +33,7 @@ export const SearchBar = () => {
         variant="filled"
         placeholder="Найти объявление..."
         value={value}
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(e) => setValue(e.currentTarget.value)}
         rightSection={
           value ? (
             <Input.ClearButton
@@ -46,7 +51,7 @@ export const SearchBar = () => {
             value: "preview",
             label: (
               <>
-                <SquaresFourIcon {...iconProps} />
+                <SquaresFourIcon style={{ display: "block" }} size={20} />
                 <VisuallyHidden>Preview</VisuallyHidden>
               </>
             ),
@@ -55,7 +60,7 @@ export const SearchBar = () => {
             value: "code",
             label: (
               <>
-                <ListBulletsIcon {...iconProps} />
+                <ListBulletsIcon style={{ display: "block" }} size={20} />
                 <VisuallyHidden>CodeIcon</VisuallyHidden>
               </>
             ),

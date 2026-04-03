@@ -10,7 +10,7 @@ import { CategoryNode } from "./CategoryNode";
 import { categoriesTree } from "../config";
 
 export const TreeView = () => {
-  const tree = useTree({ initialExpandedState: { Категория: true } });
+  const tree = useTree({ initialExpandedState: { root: true } });
 
   const renderTreeNode = ({
     node,

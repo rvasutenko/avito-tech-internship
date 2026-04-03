@@ -1,9 +1,11 @@
+import { useStores } from "@/app/providers";
 import { useItems } from "@/entities/item";
 import { pluralize } from "@/shared/utils";
 import { Skeleton, Text } from "@mantine/core";
 
 export const ItemsTotal = () => {
-  const { data, isLoading } = useItems({});
+  const { filters } = useStores();
+  const { data, isLoading } = useItems(filters.queryParams);
 
   if (isLoading) return <Skeleton mt={4.8} mb={4} height={16} width={128} />;
 
