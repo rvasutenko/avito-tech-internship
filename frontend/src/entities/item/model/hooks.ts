@@ -1,16 +1,17 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { ItemService } from "../api/index";
-import type { ItemsGetIn, ItemUpdateIn } from "../api/types";
+import type { ItemGetOut, ItemsGetIn, ItemsGetOut, ItemUpdateIn } from "../api/types";
+import type { ApiError } from "@/shared/api/ApiError";
 
 export const useItems = (params: ItemsGetIn) => {
-  return useQuery({
+  return useQuery<ItemsGetOut, ApiError>({
     queryKey: ["items", params],
     queryFn: () => ItemService.getAll(params),
   });
 };
 
-export const useItem = (id: string) => {
-  return useQuery({
+export const useItem = (id: number) => {
+  return useQuery<ItemGetOut, ApiError>({
     queryKey: ["item", id],
     queryFn: () => ItemService.getById(id),
   });

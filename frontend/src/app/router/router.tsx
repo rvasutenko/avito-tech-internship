@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import { ItemsList, Root } from "@/pages";
+import { Item, ItemsList, Root } from "@/pages";
 import { ROUTES_NAMES } from "./types";
 
 export const createRoutes = () => {
@@ -14,8 +14,12 @@ export const createRoutes = () => {
           element: <ItemsList />,
         },
         {
+          path: ROUTES_NAMES.AD,
+          element: <Item />,
+        },
+        {
           path: "*",
-          element: <Navigate to={"/"} replace />,
+          element: <Navigate to={ROUTES_NAMES.ADS_LIST} replace />,
         },
       ],
     },

@@ -1,5 +1,5 @@
 import { api } from "@/shared/api/base";
-import type { ItemsGetIn, ItemsGetOut, ItemUpdateIn } from "./types";
+import type { ItemGetOut, ItemsGetIn, ItemsGetOut, ItemUpdateIn } from "./types";
 
 export class ItemService {
   static async getAll(params: ItemsGetIn): Promise<ItemsGetOut> {
@@ -8,7 +8,7 @@ export class ItemService {
     return res.data;
   }
 
-  static async getById(id: string): Promise<any[]> { // TODO: define type
+  static async getById(id: number): Promise<ItemGetOut> { // TODO: define type
     const res = await api.get(`/items/${id}`);
 
     return res.data;

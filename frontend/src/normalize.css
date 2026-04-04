@@ -31,4 +31,9 @@ body {
   height: 100dvh;
   padding: 24px 40px;
   background: var(--bg-primary);
+  overflow: scroll;
+}
+
+.mantine-Badge-label {
+  text-box-edge: auto !important;
 }

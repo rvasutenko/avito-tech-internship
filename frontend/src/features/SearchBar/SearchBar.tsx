@@ -1,3 +1,4 @@
+import { useStores } from "@/app/providers";
 import s from "./SearchBar.module.scss";
 import {
   Group,
@@ -7,19 +8,30 @@ import {
   VisuallyHidden,
 } from "@mantine/core";
 import {
+  FunnelIcon,
   ListBulletsIcon,
   MagnifyingGlassIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDebouncedValue } from "@mantine/hooks";
+import { DEBOUNCE_WAIT, SORT_OPTIONS } from "./config";
 
 export const SearchBar = () => {
-  const [value, setValue] = useState("");
+  const { filters } = useStores();
 
-  const iconProps = {
-    style: { display: "block" },
-    size: 20,
-  };
+  const [value, setValue] = useState(filters.search);
+  const [debounced] = useDebouncedValue(value, DEBOUNCE_WAIT);
+
+  const clearSearch = () => setValue("");
+
+  useEffect(() => {
+    filters.setSearch(debounced);
+  }, [debounced]);
+
+  useEffect(() => {
+    setValue(filters.search);
+  }, [filters.search]);
 
   return (
     <Group className={s.searchBar} align={"center"} gap={"xs"}>
@@ -28,13 +40,10 @@ export const SearchBar = () => {
         variant="filled"
         placeholder="Найти объявление..."
         value={value}
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(e) => setValue(e.currentTarget.value)}
         rightSection={
           value ? (
-            <Input.ClearButton
-              aria-label="Clear input"
-              onClick={() => setValue("")}
-            />
+            <Input.ClearButton aria-label="Clear input" onClick={clearSearch} />
           ) : null
         }
         flex={1}
@@ -46,7 +55,7 @@ export const SearchBar = () => {
             value: "preview",
             label: (
               <>
-                <SquaresFourIcon {...iconProps} />
+                <SquaresFourIcon style={{ display: "block" }} size={20} />
                 <VisuallyHidden>Preview</VisuallyHidden>
               </>
             ),
@@ -55,7 +64,7 @@ export const SearchBar = () => {
             value: "code",
             label: (
               <>
-                <ListBulletsIcon {...iconProps} />
+                <ListBulletsIcon style={{ display: "block" }} size={20} />
                 <VisuallyHidden>CodeIcon</VisuallyHidden>
               </>
             ),
@@ -64,15 +73,12 @@ export const SearchBar = () => {
       />
       <Select
         placeholder="Сортировать..."
-        data={[
-          "Сначала новые",
-          "Сначала старые",
-          "Сначала дешевле",
-          "Сначала дороже",
-          "А → Я",
-          "Я → А",
-        ]}
+        leftSection={<FunnelIcon />}
+        value={filters.sortValue}
+        onChange={(value) => filters.setSort(value!)}
+        data={SORT_OPTIONS}
         variant="filled"
+        allowDeselect={false}
       />
     </Group>
   );

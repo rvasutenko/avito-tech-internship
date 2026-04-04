@@ -1,3 +1,3 @@
-export { Loading } from "./Loading/Loading";
+export { Item } from "./Item/Item";
 export { ItemsList } from "./ItemsList/ItemsList";
 export { Root } from "./Root/Root";

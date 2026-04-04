@@ -1,5 +1,20 @@
 import type { CATEGORY } from "../model/category";
-import type { ItemParams } from "../model/types";
+import type { ItemParams } from "../model/params";
+
+export type SortColumn = "title" | "createdAt";
+export type SortDirection = "asc" | "desc";
+
+export type ItemGetOut = {
+  id: number;
+  category: CATEGORY;
+  title: string;
+  description: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+  params: ItemParams;
+  needsRevision: boolean;
+};
 
 export type ItemsGetIn = {
   q?: string;
@@ -7,8 +22,8 @@ export type ItemsGetIn = {
   skip?: number;
   needsRevision?: boolean;
   categories?: string;
-  sortColumn?: "title" | "createdAt";
-  sortDirection?: "asc" | "desc";
+  sortColumn?: SortColumn;
+  sortDirection?: SortDirection;
 };
 
 export type ItemsGetOut = {
