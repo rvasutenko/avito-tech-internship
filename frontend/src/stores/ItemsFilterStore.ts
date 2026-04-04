@@ -26,11 +26,11 @@ export class ItemsFilterStore {
 
     this.needsRevision = params.get("needsRevision") === "true";
 
-    const sortColumn = params.get("sortColumn") || "";
-    const sortDirection = params.get("sortDirection") || "";
+    const sortColumn = params.get("sortColumn") as SortColumn || "createdAt";
+    const sortDirection = params.get("sortDirection") as SortDirection || "desc";
 
-    this.sortColumn = sortColumn as SortColumn;
-    this.sortDirection = sortDirection as SortDirection;
+    this.sortColumn = sortColumn;
+    this.sortDirection = sortDirection;
 
     this.page = Number(params.get("page") || 1);
   }
@@ -60,10 +60,16 @@ export class ItemsFilterStore {
     this.search = value;
     this.page = 1;
   }
-
-  setSort(column: SortColumn, direction: SortDirection) {
+  
+  setSort(value: string) {
+    const [column, direction] = value.split("_") as [SortColumn, SortDirection];
+  
     this.sortColumn = column;
     this.sortDirection = direction;
+  }
+
+  get sortValue() {
+    return `${this.sortColumn}_${this.sortDirection}`;
   }
 
   setPage(page: number) {

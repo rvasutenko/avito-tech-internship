@@ -1,4 +1,4 @@
-import { useItems } from "@/entities/item";
+import { useItems } from "@/entities";
 import { useStores } from "@/app/providers";
 import { useNavigate } from "react-router-dom";
 import { ROUTES_NAMES } from "@/app/router";

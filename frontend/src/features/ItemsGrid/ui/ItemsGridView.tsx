@@ -1,7 +1,7 @@
-import { ItemCard } from "@/entities/item";
+import { ItemCard } from "@/entities";
 import { Grid, Pagination, Space } from "@mantine/core";
-import { ON_PAGE_COUNT } from "../config";
 import type { ItemsGetOut } from "@/entities/item/api/types";
+import { useStores } from "@/app/providers";
 
 type ItemsGridViewProps = {
   data: ItemsGetOut;
@@ -11,6 +11,7 @@ type ItemsGridViewProps = {
 
 export const ItemsGridView = ({ data, onRow, onClick }: ItemsGridViewProps) => {
   const hash = (ad: Record<string, any>) => Object.values(ad).join("-");
+  const { filters } = useStores();
 
   return (
     <>
@@ -25,7 +26,11 @@ export const ItemsGridView = ({ data, onRow, onClick }: ItemsGridViewProps) => {
         ))}
       </Grid>
       <Space h={"xl"} />
-      <Pagination total={ON_PAGE_COUNT} onChange={() => {}} />
+      <Pagination
+        total={Math.ceil((data?.total || 0) / filters.limit)}
+        value={filters.page}
+        onChange={(page) => filters.setPage(page)}
+      />
     </>
   );
 };

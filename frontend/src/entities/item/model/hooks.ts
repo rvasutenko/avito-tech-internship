@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { ItemService } from "../api/index";
-import type { ItemsGetIn, ItemsGetOut, ItemUpdateIn } from "../api/types";
+import type { ItemGetOut, ItemsGetIn, ItemsGetOut, ItemUpdateIn } from "../api/types";
 import type { ApiError } from "@/shared/api/ApiError";
 
 export const useItems = (params: ItemsGetIn) => {
@@ -10,8 +10,8 @@ export const useItems = (params: ItemsGetIn) => {
   });
 };
 
-export const useItem = (id: string) => {
-  return useQuery<any, ApiError>({
+export const useItem = (id: number) => {
+  return useQuery<ItemGetOut, ApiError>({
     queryKey: ["item", id],
     queryFn: () => ItemService.getById(id),
   });

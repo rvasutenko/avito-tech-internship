@@ -8,19 +8,20 @@ export const useSyncFiltersWithUrl = () => {
 
   useEffect(() => {
     filters.setFromQuery(searchParams);
-  }, []);
+  }, [searchParams]);
 
   // useEffect(() => {
   //   const current = searchParams.toString();
   //   const next = filters.queryString;
-  
+
   //   if (current !== next) {
   //     setSearchParams(next);
   //   }
   // }, [filters.queryString]);
 
   useEffect(() => {
-    setSearchParams(filters.queryString);
+    if (filters.queryString !== searchParams.toString())
+      setSearchParams(filters.queryString);
   }, [
     filters.search,
     filters.categories,

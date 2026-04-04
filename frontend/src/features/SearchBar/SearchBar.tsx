@@ -8,13 +8,14 @@ import {
   VisuallyHidden,
 } from "@mantine/core";
 import {
+  FunnelIcon,
   ListBulletsIcon,
   MagnifyingGlassIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
-import { DEBOUNCE_WAIT } from "./config";
+import { DEBOUNCE_WAIT, SORT_OPTIONS } from "./config";
 
 export const SearchBar = () => {
   const { filters } = useStores();
@@ -22,9 +23,15 @@ export const SearchBar = () => {
   const [value, setValue] = useState(filters.search);
   const [debounced] = useDebouncedValue(value, DEBOUNCE_WAIT);
 
+  const clearSearch = () => setValue("");
+
   useEffect(() => {
     filters.setSearch(debounced);
   }, [debounced]);
+
+  useEffect(() => {
+    setValue(filters.search);
+  }, [filters.search]);
 
   return (
     <Group className={s.searchBar} align={"center"} gap={"xs"}>
@@ -36,10 +43,7 @@ export const SearchBar = () => {
         onChange={(e) => setValue(e.currentTarget.value)}
         rightSection={
           value ? (
-            <Input.ClearButton
-              aria-label="Clear input"
-              onClick={() => setValue("")}
-            />
+            <Input.ClearButton aria-label="Clear input" onClick={clearSearch} />
           ) : null
         }
         flex={1}
@@ -69,15 +73,12 @@ export const SearchBar = () => {
       />
       <Select
         placeholder="Сортировать..."
-        data={[
-          "Сначала новые",
-          "Сначала старые",
-          "Сначала дешевле",
-          "Сначала дороже",
-          "А → Я",
-          "Я → А",
-        ]}
+        leftSection={<FunnelIcon />}
+        value={filters.sortValue}
+        onChange={(value) => filters.setSort(value!)}
+        data={SORT_OPTIONS}
         variant="filled"
+        allowDeselect={false}
       />
     </Group>
   );

@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import { ItemsList, Root } from "@/pages";
+import { Item, ItemsList, Root } from "@/pages";
 import { ROUTES_NAMES } from "./types";
 
 export const createRoutes = () => {
@@ -12,6 +12,10 @@ export const createRoutes = () => {
         {
           path: ROUTES_NAMES.ADS_LIST,
           element: <ItemsList />,
+        },
+        {
+          path: ROUTES_NAMES.AD,
+          element: <Item />,
         },
         {
           path: "*",

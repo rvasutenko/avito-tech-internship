@@ -1,5 +1,5 @@
 import { useStores } from "@/app/providers";
-import { useItems } from "@/entities/item";
+import { useItems } from "@/entities";
 import { pluralize } from "@/shared/utils";
 import { Skeleton, Text } from "@mantine/core";
 
@@ -14,6 +14,8 @@ export const ItemsTotal = () => {
     "объявления",
     "объявлений",
   ]);
+
+  if (!data?.total) return <Text>Ничего не найдено</Text>;
 
   return (
     <Text>
