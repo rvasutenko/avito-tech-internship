@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 
 import items from 'data/items.json' with { type: 'json' };
 import { Item } from 'src/types.ts';
@@ -13,6 +14,12 @@ const fastify = Fastify({
 });
 
 await fastify.register((await import('@fastify/middie')).default);
+
+await fastify.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
 // Искуственная задержка ответов, чтобы можно было протестировать состояния загрузки
 fastify.use((_, __, next) =>

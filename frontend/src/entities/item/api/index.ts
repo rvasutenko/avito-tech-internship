@@ -14,7 +14,7 @@ export class ItemService {
     return res.data;
   }
 
-  static async updateById(id: string, payload: ItemUpdateIn): Promise<any[]> { // TODO: define type
+  static async updateById(id: number, payload: ItemUpdateIn): Promise<any[]> { // TODO: define type
     const res = (await api.put(`/items/${id}`, payload)) as any; // TODO: define type
 
     return res.data;

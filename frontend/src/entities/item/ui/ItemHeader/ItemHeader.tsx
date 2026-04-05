@@ -41,8 +41,8 @@ export const ItemHeader = ({
       <Group justify="space-between">
         <Stack gap="md" align="start">
           <Group align="center">
-            <ActionIcon variant="subtle" onClick={onBack} size="lg">
-              <ArrowLeftIcon />
+            <ActionIcon color={"gray"} variant="subtle" onClick={onBack} size="lg">
+              <ArrowLeftIcon size={20} weight="bold" />
             </ActionIcon>
             <Title order={2}>{data?.title}</Title>
           </Group>

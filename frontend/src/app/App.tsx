@@ -1,8 +1,10 @@
 import { RouterProvider } from "react-router-dom";
 import { createRoutes } from "./router";
 import { MantineProvider } from "@mantine/core";
-import "@mantine/core/styles.css";
 import { QueryProvider, RootStoreProvider } from "./providers";
+import { Notifications } from "@mantine/notifications";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 export const App = () => {
   const router = createRoutes();
@@ -11,6 +13,7 @@ export const App = () => {
     <RootStoreProvider>
       <QueryProvider>
         <MantineProvider>
+          <Notifications />
           <RouterProvider router={router} />
         </MantineProvider>
       </QueryProvider>
