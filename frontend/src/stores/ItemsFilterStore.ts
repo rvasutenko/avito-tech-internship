@@ -82,15 +82,18 @@ export class ItemsFilterStore {
     } else {
       this.categories = [...this.categories, category];
     }
+    this.page = 1;
   }
 
   setNeedsRevision(value: boolean) {
     this.needsRevision = value;
+    this.page = 1;
   }
 
   reset() {
     this.categories = [];
     this.needsRevision = false;
+    this.page = 1;
   }
 
   get queryParams() {

@@ -11,6 +11,7 @@ import {
 import FallbackImage from "@/assets/fallback.webp";
 import { CATEGORY_MAP, type CATEGORY } from "../../model/category";
 import { CircleIcon } from "@phosphor-icons/react";
+import { ITEM_IMG } from "@/shared/config/config";
 
 type ItemCardProps = {
   onRow: number;
@@ -39,7 +40,7 @@ export const ItemCard = ({
       >
         <Card.Section>
           <Image
-            src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
+            src={ITEM_IMG}
             height={IMG_HEIGHT}
             alt={title}
             fallbackSrc={FallbackImage}
