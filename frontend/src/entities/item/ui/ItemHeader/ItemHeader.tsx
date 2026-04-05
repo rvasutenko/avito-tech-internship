@@ -38,13 +38,20 @@ export const ItemHeader = ({
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between">
+      <Group justify="space-between" wrap="nowrap" gap={128}>
         <Stack gap="md" align="start">
-          <Group align="center">
-            <ActionIcon color={"gray"} variant="subtle" onClick={onBack} size="lg">
+          <Group align="center" wrap="nowrap">
+            <ActionIcon
+              color={"gray"}
+              variant="subtle"
+              onClick={onBack}
+              size="lg"
+            >
               <ArrowLeftIcon size={20} weight="bold" />
             </ActionIcon>
-            <Title order={2}>{data?.title}</Title>
+            <Title order={2} style={{ wordBreak: "break-word" }} lineClamp={1}>
+              {data?.title}
+            </Title>
           </Group>
           <Button
             onClick={onEdit}
@@ -54,7 +61,7 @@ export const ItemHeader = ({
             Редактировать
           </Button>
         </Stack>
-        <Stack gap={4} align="end">
+        <Stack gap={4} align="end" style={{ flexShrink: 0 }}>
           <Title order={2}>
             <NumberFormatter
               value={data?.price}

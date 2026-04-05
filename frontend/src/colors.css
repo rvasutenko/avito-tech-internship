@@ -1,3 +1,7 @@
 :root {
-  --bg-primary: #F7F5F8;
+  --bg-primary: #F6F6F8;
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --bg-primary: var(--mantine-color-dark-7);
 }

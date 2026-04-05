@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-
+import "dotenv/config";
 import items from 'data/items.json' with { type: 'json' };
 import { Item } from 'src/types.ts';
 import { ItemsGetInQuerySchema, ItemUpdateInSchema } from 'src/validation.ts';
@@ -172,6 +172,175 @@ fastify.put<ItemUpdateRequest>('/items/:id', (request, reply) => {
 });
 
 const port = Number(process.env.port) ?? 8080;
+
+import axios from "axios";
+import { getGigaChatToken } from 'src/tokenManager.ts';
+import { httpsAgent } from 'src/httpsAgent.ts';
+
+fastify.post('/ai/generate-description', async (request, reply) => {
+  try {
+    const { title, category, params, description } = request.body as {
+      title: string;
+      category: string;
+      description?: string;
+      params: Record<string, any>;
+    };
+
+    if (!title || !category) {
+      return reply.status(400).send({
+        success: false,
+        error: 'title и category обязательны',
+      }); 
+    }
+
+    const prompt = `
+      Ты помогаешь писать продающие объявления на Avito.
+
+      Сгенерируй описание товара, опираясь на следующую информацию о нем:
+      Название: ${title}
+      Категория: ${category}
+      Характеристики: ${JSON.stringify(params, null, 2)}
+      Описание, которое написал сам пользователь: ${description}
+
+      Требования:
+      - Коротко (5-8 предложений)
+      - Продающий стиль
+      - Без воды
+      - На русском языке
+      - Никакого md форматирования. Только текст содержащий буквы, цифры и знаки препинания.
+    `;
+
+    const token = await getGigaChatToken();
+
+    const response = await axios.post(
+      'https://gigachat.devices.sberbank.ru/api/v1/chat/completions',
+      {
+        model: 'GigaChat',
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+      },
+      {
+        httpsAgent,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const text = response.data.choices?.[0]?.message?.content;
+
+    return {
+      success: true,
+      text,
+    };
+  } catch (error: any) {
+    fastify.log.error(error?.response?.data || error.message);
+    console.error(error);
+
+    return reply.status(500).send({
+      success: false,
+      error: 'Ошибка генерации описания',
+    });
+  }
+});
+
+fastify.post('/ai/get-market-price', async (request, reply) => {
+  try {
+    const { title, category, params, description } = request.body as {
+      title: string;
+      category: string;
+      description?: string;
+      params: Record<string, any>;
+    };
+
+    if (!title || !category) {
+      return reply.status(400).send({
+        success: false,
+        error: 'title и category обязательны',
+      }); 
+    }
+
+    const prompt = `
+      Ты эксперт по оценке рыночной стоимости товаров на вторичном рынке.
+
+      Твоя задача — на основе параметров товара оценить среднюю рыночную цену и дать диапазоны цен в зависимости от состояния.
+
+      Входные данные:
+      Название товара: ${title}
+      Категория: ${category}
+      Характеристики: ${JSON.stringify(params, null, 2)}
+      Описание, которое написал сам пользователь: ${description}
+
+      Сгенерируй ответ в следующем формате:
+
+      1. Укажи название товара в начале.
+      2. Затем укажи 3 диапазона цен:
+        - Отличное состояние
+        - Хорошее/среднее состояние
+        - Плохое состояние / срочная продажа / дефекты
+
+      3. Формат строго такой:
+
+      Средняя цена на {название товара}:\n
+      {диапазон} ₽ — отличное состояние.\n
+      {диапазон} ₽ — хорошее состояние, небольшой износ.\n
+      {диапазон} ₽ — срочно или с дефектами.
+
+      Требования:
+      - Используй реальные рыночные ориентиры (если точных данных нет — делай разумную оценку).
+      - Не придумывай абстрактные объяснения — только итог.
+      - Пиши кратко, без лишнего текста.
+      - Валюта: ₽
+      - Используй диапазоны цен (например: 100 000 – 120 000 ₽)
+      - Пиши на русском языке.
+      - Никакого md форматирования. Только текст содержащий буквы, цифры и знаки препинания.
+    `;
+
+    const token = await getGigaChatToken();
+
+    const response = await axios.post(
+      'https://gigachat.devices.sberbank.ru/api/v1/chat/completions',
+      {
+        model: 'GigaChat',
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+      },
+      {
+        httpsAgent,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const text = response.data.choices?.[0]?.message?.content;
+
+    return {
+      success: true,
+      text,
+    };
+  } catch (error: any) {
+    fastify.log.error(error?.response?.data || error.message);
+    console.error(error);
+
+    return reply.status(500).send({
+      success: false,
+      error: 'Ошибка генерации описания',
+    });
+  }
+});
 
 fastify.listen({ port }, function (err, _address) {
   if (err) {

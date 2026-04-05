@@ -33,8 +33,9 @@ export const ItemsFilter = () => {
       </Card>
 
       <Button
-        variant="white"
-        color="black"
+        variant="filled"
+        bg="var(--mantine-color-default)"
+        c="var(--mantine-color-bright)"
         size="md"
         onClick={() => filters.reset()}
       >

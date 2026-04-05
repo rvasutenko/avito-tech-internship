@@ -16,8 +16,9 @@ import {
 import { useEffect, useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
 import { DEBOUNCE_WAIT, SORT_OPTIONS } from "./config";
+import { observer } from "mobx-react-lite";
 
-export const SearchBar = () => {
+export const SearchBar = observer(() => {
   const { filters } = useStores();
 
   const [value, setValue] = useState(filters.search);
@@ -49,10 +50,12 @@ export const SearchBar = () => {
         flex={1}
       />
       <SegmentedControl
+        value={filters.view}
+        onChange={(value) => filters.setView(value as "grid" | "list")}
         size="md"
         data={[
           {
-            value: "preview",
+            value: "grid",
             label: (
               <>
                 <SquaresFourIcon style={{ display: "block" }} size={20} />
@@ -61,7 +64,7 @@ export const SearchBar = () => {
             ),
           },
           {
-            value: "code",
+            value: "list",
             label: (
               <>
                 <ListBulletsIcon style={{ display: "block" }} size={20} />
@@ -82,4 +85,4 @@ export const SearchBar = () => {
       />
     </Group>
   );
-};
+});

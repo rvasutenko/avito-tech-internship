@@ -6,6 +6,7 @@ import {
   LoadingOverlay,
   NumberInput,
   Select,
+  Stack,
   Text,
   Textarea,
   TextInput,
@@ -21,6 +22,8 @@ import { ClearButton } from "./ClearButton";
 import { useNavigate } from "react-router-dom";
 import { ROUTES_NAMES } from "@/app/router";
 import { useUpdateItem } from "@/entities";
+import { GenerateDescriptionButton } from "@/features/generate-item-description/ui/GenerateDescriptionButton";
+import { GetMarketPriceButton } from "@/features/get-market-price";
 
 const CATEGORY_FIELDS_MAP: Record<
   CATEGORY,
@@ -111,6 +114,7 @@ export const EditItemForm = ({
                 Название
               </Title>
             }
+            // maxLength={50}
             withAsterisk
             error={fieldState.error?.message}
             rightSection={ClearButton({ field })}
@@ -120,42 +124,45 @@ export const EditItemForm = ({
 
       <Divider mt="lg" mb="md" />
 
-      <Controller
-        control={control}
-        name="price"
-        rules={{
-          required: "Обязательное поле",
-          min: {
-            value: 1,
-            message: "Цена должна быть больше 0 ₽",
-          },
-        }}
-        render={({ field, fieldState }) => (
-          <NumberInput
-            value={field.value ?? ""}
-            onChange={field.onChange}
-            placeholder="Введите цену"
-            label={
-              <Title display={"inline"} order={5}>
-                Цена
-              </Title>
-            }
-            stepHoldDelay={500}
-            stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
-            error={fieldState.error?.message}
-            thousandSeparator=" "
-            allowNegative={false}
-            max={999999999}
-            suffix=" ₽"
-            allowDecimal={false}
-            trimLeadingZeroesOnBlur
-            withAsterisk
-            hideControls
-            rightSection={ClearButton({ field })}
-            rightSectionWidth={34}
-          />
-        )}
-      />
+      <Stack gap="xs">
+        <Controller
+          control={control}
+          name="price"
+          rules={{
+            required: "Обязательное поле",
+            min: {
+              value: 1,
+              message: "Цена должна быть больше 0 ₽",
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <NumberInput
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              placeholder="Введите цену"
+              label={
+                <Title display={"inline"} order={5}>
+                  Цена
+                </Title>
+              }
+              stepHoldDelay={500}
+              stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
+              error={fieldState.error?.message}
+              thousandSeparator=" "
+              allowNegative={false}
+              max={999999999}
+              suffix=" ₽"
+              allowDecimal={false}
+              trimLeadingZeroesOnBlur
+              withAsterisk
+              hideControls
+              rightSection={ClearButton({ field })}
+              rightSectionWidth={34}
+            />
+          )}
+        />
+        <GetMarketPriceButton form={form} />
+      </Stack>
 
       <Divider mt="lg" mb="md" />
 
@@ -169,28 +176,28 @@ export const EditItemForm = ({
         </>
       )}
 
-      <Controller
-        control={control}
-        name="description"
-        render={({ field }) => (
-          <Textarea
-            {...field}
-            placeholder="Введите описание"
-            label="Описание"
-            rows={4}
-            rightSection={
-              <Text size="xs" pb={2} pr={4} ml={"auto"} mt={"auto"}>
-                {field.value?.length ?? 0}/1000
-              </Text>
-            }
-            rightSectionWidth={70}
-            maxLength={1000}
-          />
-        )}
-      />
-      <Button variant="light" onClick={handleCancelClick}>
-        Улучшить описание
-      </Button>
+      <Stack gap="xs">
+        <Controller
+          control={control}
+          name="description"
+          render={({ field }) => (
+            <Textarea
+              {...field}
+              placeholder="Введите описание"
+              label="Описание"
+              rows={6}
+              rightSection={
+                <Text size="xs" pb={2} pr={4} ml={"auto"} mt={"auto"}>
+                  {field.value?.length ?? 0}/1000
+                </Text>
+              }
+              rightSectionWidth={70}
+              maxLength={1000}
+            />
+          )}
+        />
+        <GenerateDescriptionButton form={form} />
+      </Stack>
 
       <Group mt="xl" gap="xs">
         <Button

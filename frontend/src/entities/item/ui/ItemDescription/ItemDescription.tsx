@@ -12,7 +12,7 @@ export const ItemDescription = ({
       <Title order={4} mt="lg">
         Описание
       </Title>
-      <Text>{description}</Text>
+      <Text style={{ wordBreak: "break-word" }}>{description}</Text>
     </Stack>
   );
 };
