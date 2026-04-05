@@ -20,6 +20,7 @@ type ItemCardProps = {
   category: CATEGORY;
   needsRevision?: boolean;
   onClick?: () => void;
+  horizontal?: boolean;
 };
 
 export const ItemCard = ({
@@ -29,16 +30,18 @@ export const ItemCard = ({
   onRow,
   needsRevision = false,
   onClick,
+  horizontal,
 }: ItemCardProps) => {
   return (
-    <Grid.Col span={GRID_TOTAL_COLS / onRow}>
+    <Grid.Col span={horizontal ? GRID_TOTAL_COLS : GRID_TOTAL_COLS / onRow}>
       <Card
         shadow="sm"
         padding="md"
         style={{ height: "100%", cursor: "pointer", overflow: "visible" }}
         onClick={onClick}
+        orientation={horizontal ? "horizontal" : "vertical"}
       >
-        <Card.Section>
+        <Card.Section style={{ flexShrink: 0 }}>
           <Image
             src={ITEM_IMG}
             height={IMG_HEIGHT}
@@ -49,15 +52,17 @@ export const ItemCard = ({
           />
         </Card.Section>
 
-        <Stack align="start" gap={4} mb={4}>
-          <Badge
-            mt={-10}
-            variant="default"
-            // styles={{ label: { textBoxEdge: "auto" } }}
-          >
+        <Stack
+          align="start"
+          justify={horizontal ? "space-between" : "flex-start"}
+          gap={4}
+          mb={4}
+          ml={horizontal ? 20 : 0}
+        >
+          <Badge mt={horizontal ? 0 : -10} variant="default">
             {CATEGORY_MAP[category]}
           </Badge>
-          <Text fw={500} mt={4} lh={"xs"}>
+          <Text fw={500} mt={4} lh={"xs"} style={{ wordBreak: "break-word" }} lineClamp={2}>
             {title}
           </Text>
           <Text fw={800} mt={4}>

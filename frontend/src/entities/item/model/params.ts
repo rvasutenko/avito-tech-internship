@@ -125,7 +125,7 @@ export const ELECTRONICS_CONDITION_MAP: Record<ELECTRONICS_CONDITION, string> =
     [ELECTRONICS_CONDITION.USED]: "Б/у",
   };
 
-enum ELECTRONICS_TYPE {
+export enum ELECTRONICS_TYPE {
   PHONE = "phone",
   LAPTOP = "laptop",
   MISC = "misc",

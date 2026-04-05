@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../api/index";
 import type {
   ItemGetOut,
@@ -7,6 +7,7 @@ import type {
   ItemUpdateIn,
 } from "../api/types";
 import type { ApiError } from "@/shared/api/ApiError";
+import { notifications } from "@mantine/notifications";
 
 export const useItems = (params: ItemsGetIn) => {
   return useQuery<ItemsGetOut, ApiError>({
@@ -27,8 +28,30 @@ export const useItem = (id: number) => {
 };
 
 export const useUpdateItem = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ItemUpdateIn }) =>
+    mutationFn: ({ id, data }: { id: number; data: ItemUpdateIn }) =>
       ItemService.updateById(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["item", id] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+
+      notifications.show({
+        title: "Изменения сохранены",
+        message: "Объявление успешно изменено",
+        position: "top-right",
+        color: "green",
+      });
+    },
+    onError: () => {
+      notifications.show({
+        title: "Ошибка сохранения",
+        message:
+          "При попытке сохранить изменения произошла ошибка. Попробуйте ещё раз или зайдите позже.",
+        position: "top-right",
+        color: "red",
+      });
+    },
   });
 };

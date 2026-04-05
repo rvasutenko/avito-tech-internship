@@ -1,4 +1,4 @@
-import { Stack, Table, Title } from "@mantine/core";
+import { Stack, Table, Text, Title } from "@mantine/core";
 import {
   mapItemParamKey,
   mapItemParamVal,
@@ -23,7 +23,7 @@ export const ItemParameters = ({
   return (
     <Stack gap="xs">
       <Title order={3}>Характеристики</Title>
-      <Table withRowBorders={false} horizontalSpacing={0} fz="md" w={400}>
+      <Table withRowBorders={false} horizontalSpacing={0} fz="md" >
         <Table.Tbody>
           {Object.entries(params || {})?.map(([key, val]) => (
             <Table.Tr key={key}>
@@ -31,7 +31,7 @@ export const ItemParameters = ({
                 {mapItemParamKey(category, key as keyof ItemParams)}
               </Table.Td>
               <Table.Td>
-                {mapItemParamVal(category, key as keyof ItemParams, val)}
+                <Text ml={20} style={{ wordBreak: "break-word" }} lineClamp={4}>{mapItemParamVal(category, key as keyof ItemParams, val)}</Text>
               </Table.Td>
             </Table.Tr>
           ))}

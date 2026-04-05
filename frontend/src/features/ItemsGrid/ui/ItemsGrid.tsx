@@ -4,8 +4,9 @@ import { ItemsGridView } from "./ItemsGridView";
 import { ItemsGridLoader } from "./ItemsGridLoader";
 import { ItemsGridError } from "./ItemsGridError";
 import { ItemsGridEmpty } from "./ItemsGridEmpty";
+import { DEFAULT_ON_ROW } from "../config";
 
-export const ItemsGrid = ({ onRow = 4 }: { onRow?: number }) => {
+export const ItemsGrid = ({ onRow = DEFAULT_ON_ROW }: { onRow?: number }) => {
   const { filters } = useStores();
 
   const { data, isLoading, isError, error } = useItems(filters.queryParams);

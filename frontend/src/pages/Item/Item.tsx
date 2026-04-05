@@ -10,7 +10,7 @@ import { Grid } from "@mantine/core";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { NotFound, ServerError } from "@/widgets";
+import { NotFound, ServerError, UnhandledError } from "@/widgets";
 import { NeedsRevision } from "./ui/NeedsRevision";
 
 export const Item = observer(() => {
@@ -32,6 +32,8 @@ export const Item = observer(() => {
   if (isError && error?.status === 404) return <NotFound />;
 
   if (isError && error?.status === 500) return <ServerError />;
+
+  if (isError) return <UnhandledError />;
 
   return (
     <Grid columnGap={40} rowGap="xl">

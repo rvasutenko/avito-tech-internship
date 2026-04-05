@@ -13,8 +13,27 @@ export class ItemsFilterStore {
   page = 1;
   limit = 10;
 
+  view: "grid" | "list" = "grid";
+
   constructor() {
     makeAutoObservable(this);
+    this.loadFromStorage();
+  }
+
+  setView(view: "grid" | "list") {
+    this.view = view;
+    this.saveToStorage();
+  }
+
+  private saveToStorage() {
+    localStorage.setItem("filters:view", this.view);
+  }
+
+  private loadFromStorage() {
+    const saved = localStorage.getItem("filters:view");
+    if (saved === "grid" || saved === "list") {
+      this.view = saved;
+    }
   }
 
   setFromQuery(params: URLSearchParams) {
