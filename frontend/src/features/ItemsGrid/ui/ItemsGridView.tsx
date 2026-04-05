@@ -2,25 +2,29 @@ import { ItemCard } from "@/entities";
 import { Grid, Pagination, Space } from "@mantine/core";
 import type { ItemsGetOut } from "@/entities/item/api/types";
 import { useStores } from "@/app/providers";
+import { useNavigate } from "react-router-dom";
+import { ROUTES_NAMES } from "@/app/router";
 
 type ItemsGridViewProps = {
   data: ItemsGetOut;
   onRow: number;
-  onClick: () => void;
 };
 
-export const ItemsGridView = ({ data, onRow, onClick }: ItemsGridViewProps) => {
-  const hash = (ad: Record<string, any>) => Object.values(ad).join("-");
+export const ItemsGridView = ({ data, onRow }: ItemsGridViewProps) => {
+  const nav = useNavigate();
   const { filters } = useStores();
+
+  const handleClick = (id: number) =>
+    nav(ROUTES_NAMES.AD.replace(":id", String(id)));
 
   return (
     <>
       <Grid gap={"md"}>
-        {data?.items?.map((ad, i) => (
+        {data?.items?.map((ad) => (
           <ItemCard
-            key={`${hash(ad)}-${i}`}
+            key={ad.id}
             onRow={onRow}
-            onClick={onClick}
+            onClick={handleClick.bind(null, ad.id)}
             {...ad}
           />
         ))}

@@ -28,6 +28,7 @@ export type ItemsGetIn = {
 
 export type ItemsGetOut = {
   items: {
+    id: number;
     category: CATEGORY;
     title: string;
     price: number;

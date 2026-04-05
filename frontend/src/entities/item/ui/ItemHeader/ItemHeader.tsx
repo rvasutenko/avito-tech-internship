@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   Divider,
   Group,
@@ -7,20 +8,22 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { ItemHeaderSkeleton } from "./ItemHeaderSkeleton";
+import type { ItemGetOut } from "../../api/types";
 
 type ItemHeaderProps = {
-  title: string;
-  price: number;
-  createdAt: string;
-  updatedAt: string;
+  data: ItemGetOut;
+  isLoading: boolean;
+  onEdit: () => void;
+  onBack: () => void;
 };
 
 export const ItemHeader = ({
-  title,
-  price,
-  createdAt,
-  updatedAt,
+  data,
+  isLoading,
+  onEdit,
+  onBack,
 }: ItemHeaderProps) => {
   const formatDateString = (dateString: string) => {
     const date = new Date(dateString);
@@ -31,22 +34,39 @@ export const ItemHeader = ({
     return `${date.toLocaleDateString()} в ${h}:${m}`;
   };
 
+  if (isLoading) return <ItemHeaderSkeleton />;
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
         <Stack gap="md" align="start">
-          <Title order={2}>{title}</Title>
-          <Button leftSection={<PencilSimpleLineIcon />}>Редактировать</Button>
+          <Group align="center">
+            <ActionIcon variant="subtle" onClick={onBack} size="lg">
+              <ArrowLeftIcon />
+            </ActionIcon>
+            <Title order={2}>{data?.title}</Title>
+          </Group>
+          <Button
+            onClick={onEdit}
+            variant="outline"
+            leftSection={<PencilSimpleLineIcon />}
+          >
+            Редактировать
+          </Button>
         </Stack>
         <Stack gap={4} align="end">
           <Title order={2}>
-            <NumberFormatter value={price} suffix=" ₽" thousandSeparator=" " />
+            <NumberFormatter
+              value={data?.price}
+              suffix=" ₽"
+              thousandSeparator=" "
+            />
           </Title>
           <Text c="gray" lh="xs" mt={4}>
-            Опубликовано: {formatDateString(createdAt)}
+            Опубликовано: {formatDateString(data?.createdAt)}
           </Text>
           <Text c="gray" lh="xs">
-            Изменено: {formatDateString(updatedAt)}
+            Изменено: {formatDateString(data?.updatedAt)}
           </Text>
         </Stack>
       </Group>

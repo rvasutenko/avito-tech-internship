@@ -1,99 +1,60 @@
-import { ItemHeader, useItem } from "@/entities";
+import { ROUTES_NAMES } from "@/app/router";
 import {
-  Grid,
-  Group,
-  Image,
-  Scroller,
-  Stack,
-  Table,
-  Text,
-  Title,
-} from "@mantine/core";
+  ItemDescription,
+  ItemGallery,
+  ItemHeader,
+  ItemParameters,
+  useItem,
+} from "@/entities";
+import { Grid } from "@mantine/core";
 import { observer } from "mobx-react-lite";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { NotFound, ServerError } from "@/widgets";
+import { NeedsRevision } from "./ui/NeedsRevision";
 
 export const Item = observer(() => {
   const params = useParams();
+  const nav = useNavigate();
 
-  const { data } = useItem(Number(params.id));
+  const id = Number(params.id);
+  const { data, isLoading, isError, error } = useItem(id);
+
+  useEffect(() => {
+    if (!id) nav(ROUTES_NAMES.ADS_LIST);
+  }, [id]);
+
+  const handleEditClick = () =>
+    nav(ROUTES_NAMES.AD_EDIT.replace(":id", String(id)));
+
+  const handleBackClick = () => nav(ROUTES_NAMES.ADS_LIST);
+
+  if (isError && error?.status === 404) return <NotFound />;
+
+  if (isError && error?.status === 500) return <ServerError />;
 
   return (
     <Grid columnGap={40} rowGap="xl">
       <Grid.Col span={12}>
         <ItemHeader
-          title={data?.title!}
-          price={data?.price!}
-          createdAt={data?.createdAt!}
-          updatedAt={data?.updatedAt!}
+          data={data!}
+          isLoading={isLoading}
+          onEdit={handleEditClick}
+          onBack={handleBackClick}
         />
       </Grid.Col>
       <Grid.Col span={4}>
-        <Stack gap={8}>
-          <Stack gap={8}>
-            <Image
-              height={320}
-              radius="md"
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-            />
-            <Scroller draggable={false} edgeGradientColor="var(--bg-primary)">
-              <Group gap={8} wrap="nowrap">
-                <Image
-                  style={{ height: 96, width: 96 }}
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                />
-                <Image
-                  style={{ height: 96, width: 96 }}
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                />
-                <Image
-                  style={{ height: 96, width: 96 }}
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                />
-                <Image
-                  style={{ height: 96, width: 96 }}
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                />
-                <Image
-                  style={{ height: 96, width: 96 }}
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                />
-              </Group>
-            </Scroller>
-          </Stack>
-        </Stack>
+        <ItemGallery isLoading={isLoading} />
       </Grid.Col>
       <Grid.Col span={8}>
-        <Stack gap="xs">
-          <Title order={3}>Характеристики</Title>
-          <Table withRowBorders={false} horizontalSpacing={0} fz="md" w={400}>
-            <Table.Tbody>
-              {Object.entries(data?.params || {})?.map(([key, val]) => (
-                <Table.Tr key={key}>
-                  <Table.Td c="gray" fw={700}>
-                    {key}
-                  </Table.Td>
-                  <Table.Td>{val}</Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Stack>
+        {data?.needsRevision && <NeedsRevision data={data} />}
+        <ItemParameters
+          category={data?.category!}
+          params={data?.params!}
+          isLoading={isLoading}
+        />
       </Grid.Col>
-      <Stack>
-        <Title order={4} mt="lg">
-          Описание
-        </Title>
-        <Text>
-          Продаю свой MacBook Pro 16" (2021) на чипе M1 Pro. Состояние отличное,
-          работал бережно. Мощности хватает на всё: от сложного монтажа до кода,
-          при этом ноутбук почти не греется.
-        </Text>
-      </Stack>
+      <ItemDescription description={data?.description} />
     </Grid>
   );
 });
